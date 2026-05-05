@@ -31,3 +31,27 @@ build/
 
 ### VS Code ###
 .vscode/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Build
+target/
+
+# Notes
+shortcut.txt
