@@ -1,5 +1,10 @@
 package com.bankflow.bankflow_api.repository;
 
-public class AccountRepository {
-    
+import com.bankflow.bankflow_api.domain.Account;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.Optional;
+
+public interface AccountRepository extends JpaRepository<Account, Long> {
+    Optional<Account> findByEmail(String email);
 }
