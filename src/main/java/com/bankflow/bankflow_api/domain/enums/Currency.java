@@ -1,5 +1,12 @@
 package com.bankflow.bankflow_api.domain.enums;
 
-public class Currency {
-    
+public enum Currency {
+
+    IDR,
+    USD,
+    SGD,
+    MYR,
+    EUR,
+    GBP
+
 }

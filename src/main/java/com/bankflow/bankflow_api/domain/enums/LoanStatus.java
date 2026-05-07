@@ -1,5 +1,7 @@
 package com.bankflow.bankflow_api.domain.enums;
 
-public class LoanStatus {
-    
+public enum LoanStatus {
+    ACTIVE,
+    PAID_OFF,
+    DEFAULTED
 }

@@ -1,5 +1,12 @@
 package com.bankflow.bankflow_api.domain.enums;
 
-public class AccountStatus {
-    
+public enum AccountStatus {
+
+    ACTIVE,
+    INACTIVE,
+    FROZEN,
+    BLOCKED,
+    CLOSED,
+    SUSPENDED
+
 }
