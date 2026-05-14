@@ -1,5 +1,10 @@
 package com.bankflow.bankflow_api.exception;
 
-public class InsufficientBalanceException {
-    
+import java.math.BigDecimal;
+
+public class InsufficientBalanceException extends RuntimeException {
+
+    public InsufficientBalanceException(BigDecimal balance, BigDecimal amount) {
+        super("Insufficient balance. Current: " + balance + ", Required: " + amount);
+    }
 }

@@ -1,5 +1,8 @@
 package com.bankflow.bankflow_api.exception;
 
-public class AccountFrozenException {
-    
+public class AccountFrozenException extends RuntimeException {
+
+    public AccountFrozenException(String message) {
+        super(message);
+    }
 }
