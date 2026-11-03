@@ -1,0 +1,32 @@
+# TODO: 
+# 1. trigger push ke main
+# 2. gate jalan kalau CI lolos
+# 3. checkout repo
+# 4. login ke container registry
+# 5. build image docker
+# 6. push ke container registry
+# 7. trigger deploy ke platform (render/ oracle cloud always free)
+# 8. secrets di github
+# 9. cek health endpoint (opsional)
+
+name: bankflow-api CD
+
+on:
+  push:
+    branches: [main, dev]
+  pull_request:
+    branches: [main]
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        steps:
+        - uses: actions/checkout@v4
+        - name: Set up JDK 17
+          uses: actions/setup-java@v4
+          with:
+            java-version: '17'
+            distribution: 'temurin'
+            cache: maven
+        - run: chmod +x ./mvnw
+        - run: ./mvnw clean package -DskipTests

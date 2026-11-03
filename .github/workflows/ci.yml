@@ -1,3 +1,10 @@
+# TODO: 
+# 1. checkout dan setup JDK 17 dengan cache Maven
+# 2. jalanin test (verify, hapus skip test)
+# 3. JaCoCo untuk laporan coverage
+# 4. analisis SonarCloud
+# 5. build jar dan upload sebagai artifact
+
 name: bankflow-api CI
 
 on:
