@@ -6,25 +6,35 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import com.bankflow.bankflow_api.repository.AuthRepository;
+import com.bankflow.bankflow_api.exception.UserAlreadyExistsException;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
 import java.util.function.Function;
+import com.bankflow.bankflow_api.domain.Auth;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Service
 @RequiredArgsConstructor
+@SuppressWarnings("java:S2143")
 public class AuthService {
 
     private final AuthenticationManager authenticationManager;
+    private final AuthRepository authRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final TokenBlacklistService tokenBlacklistService;
 
-    private final String secretKey = System.getenv().getOrDefault(
-            "JWT_SECRET",
-            "dGhpc2lzYXZlcnlzZWNyZXRrZXl0aGF0aXNsZW5ndGh5ZW5vdWdo"
-    );
+    @Value("${jwt.secret}")
+    private String secretKey;
+
+    @Value("${jwt.access-expiration}")
+    private long accessExpiration;
 
     public String login(String email, String password) {
         authenticationManager.authenticate(
@@ -33,11 +43,29 @@ public class AuthService {
         return generateToken(email);
     }
 
+    public String register(String email, String password) {
+        if (authRepository.existsByUsername(email)) {
+            throw new UserAlreadyExistsException("User already exists");
+        }
+        authRepository.save(new Auth(email, passwordEncoder.encode(password)));
+        return generateToken(email);
+    }
+
+    public Boolean logout(String token){
+        Date expiration = extractClaim(token, Claims::getExpiration);
+        long ttl = expiration.getTime() - System.currentTimeMillis();
+        if (ttl > 0) {
+            tokenBlacklistService.blacklist(token, ttl);
+            return true;
+        }
+        return false;
+    }
+
     public String generateToken(String username) {
         return Jwts.builder()
                 .setSubject(username)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60))
+                .setExpiration(new Date(System.currentTimeMillis() + accessExpiration))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
