@@ -9,7 +9,6 @@ RUN chmod +x /app/mvnw && /app/mvnw package -DskipTests
 FROM eclipse-temurin:17-jre AS final-stage
 WORKDIR /app
 COPY --from=build-stage /app/target/*.jar /app/bankflow-api.jar
-RUN groupadd -r bankflow && useradd -r -g bankflow bankflow
-USER bankflow
+USER 1000
 EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "/app/bankflow-api.jar"]

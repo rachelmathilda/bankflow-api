@@ -1,7 +1,7 @@
 package com.bankflow.bankflow_api.config;
 
-import com.bankflow.bankflow_api.service.AccountService;
 import com.bankflow.bankflow_api.service.AuthService;
+import com.bankflow.bankflow_api.service.AuthUserDetailsService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,7 +21,7 @@ import java.io.IOException;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final AuthService authService;
-    private final AccountService accountService;
+    private final AuthUserDetailsService authUserDetailsService;
 
     @Override
     protected void doFilterInternal(
@@ -42,7 +42,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
-            UserDetails userDetails = accountService.loadUserByUsername(username);
+            UserDetails userDetails = authUserDetailsService.loadUserByUsername(username);
 
             if (authService.isTokenValid(jwt, userDetails)) {
 

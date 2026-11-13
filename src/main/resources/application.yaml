@@ -29,3 +29,21 @@ jwt:
 
 cors:
   allowed-origins: http://localhost:3001
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+  endpoint:
+    health:
+      show-details: never
+  metrics:
+    tags:
+      application: bankflow-api
+
+sentry:
+  dsn: ${SENTRY_DSN:}
+  environment: ${SPRING_PROFILES_ACTIVE:dev}
+  send-default-pii: false
+  traces-sample-rate: 0.1
